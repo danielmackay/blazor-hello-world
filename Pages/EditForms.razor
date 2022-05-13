@@ -1,0 +1,52 @@
+﻿@page "/editforms"
+
+@using Serilog;
+@using BlazorHelloWorld.Models;
+
+<h1>Edit Forms and Fluent Validation</h1>
+
+<EditForm Model="BlogPostModel" OnValidSubmit="HandleValidSubmit">
+    @*<DataAnnotationsValidator />*@
+    <Blazored.FluentValidation.FluentValidationValidator />
+
+    <div class="row mt-4">
+        <label for="title">Title</label>
+        <InputText id="title" @bind-Value="BlogPostModel.Title" class="form-control" />
+        <ValidationMessage For="@(() => BlogPostModel.Title)" />
+    </div>
+
+    <div class="row mt-4">
+        <label for="slug">Slug</label>
+        <InputText id="slug" @bind-Value="BlogPostModel.Slug" class="form-control" />
+        <ValidationMessage For="@(() => BlogPostModel.Slug)" />
+
+    </div>
+
+    <div class="row mt-4">
+        <label for="Content">Content</label>
+        <InputTextArea id="content" @bind-Value="BlogPostModel.Content" class="form-control" />
+        <ValidationMessage For="@(() => BlogPostModel.Content)" />
+
+    </div>
+
+    <div class="row mt-4">
+        <button type="submit" class="btn btn-primary">Publish</button>
+    </div>
+
+@*    <div class="row mt-4">
+        <ValidationSummary />
+    </div>*@
+
+</EditForm>
+
+@code {
+    protected BlogPost BlogPostModel { get; set; } = new BlogPost();
+
+    protected void HandleValidSubmit()
+    {
+        Log.Information("Valid Submit!");
+        Log.Information("Your title: " + BlogPostModel.Title);
+        Log.Information("Your slug: " + BlogPostModel.Slug);
+        Log.Information("Your content: " + BlogPostModel.Content);
+    }
+}
