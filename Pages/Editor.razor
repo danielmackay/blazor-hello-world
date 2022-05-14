@@ -1,0 +1,39 @@
+﻿@page "/editor"
+
+@using Markdig
+@using Serilog
+
+@inject MarkdownPipeline Pipeline
+
+<div class="row" style="height: 600px;">
+    <div class="col-6 h-100">
+        <textarea class="form-control h-100" @bind-value="MarkdownText" @bind-value:event="oninput"></textarea>
+    </div>
+    <div class="col-6 h-100">
+        @((MarkupString)HtmlToRender)
+    </div>
+</div>
+
+@code {
+    public string MarkdownText { get; set; } = string.Empty;
+
+    private string _html = string.Empty;
+
+    public string HtmlToRender
+    {
+        get
+        {
+            try
+            {
+                _html = Markdown.ToHtml(MarkdownText ?? string.Empty, Pipeline);
+                return _html;
+            }
+            catch (NullReferenceException nrx)
+            {
+                Log.Error(nrx, "Couldn't Render Markdown Text");
+            }
+
+            return _html;
+        }
+    }
+}
